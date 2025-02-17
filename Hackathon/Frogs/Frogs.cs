@@ -24,58 +24,51 @@ namespace Hackathon
             driver.Navigate().GoToUrl("https://www.lutanho.net/play/frogs.html");
             Assert.That(driver.Title, Is.EqualTo("Frogs"));
 
-            var frogElements = driver.FindElements(By.TagName("img"));
+            bool combinationFound = false;
 
-            int brownFrogs = 0;
-            int greenFrogs = 0;
-            int emptySpaces = 0;
-
-            foreach (IWebElement frog in frogElements)
+            while (!combinationFound)
             {
-                string frogSrc = frog.GetAttribute("src"); 
+                var frogElements = driver.FindElements(By.TagName("img"));
 
-                if (frogSrc.Contains("frog1.gif")) 
+                int brownFrogs = 0;
+                int greenFrogs = 0;
+                int emptySpaces = 0;
+
+                foreach (IWebElement frog in frogElements)
                 {
-                    brownFrogs++;
+                    string frogSrc = frog.GetAttribute("src");
+
+                    if (frogSrc.Contains("frog1.gif"))
+                    {
+                        brownFrogs++;
+                    }
+                    else if (frogSrc.Contains("frog2.gif"))
+                    {
+                        greenFrogs++;
+                    }
+                    else if (frogSrc.Contains("frog0.gif"))
+                    {
+                        emptySpaces++;
+                    }
                 }
-                else if (frogSrc.Contains("frog2.gif"))
+
+                //Console.WriteLine($"Brown Frogs: {brownFrogs}"); Console.WriteLine("Brown Frogs: " + brownFrogs);
+                //Console.WriteLine($"Green Frogs: {greenFrogs}");
+                //Console.WriteLine($"Empty Spaces: {emptySpaces}");
+
+                if (brownFrogs == 2 && greenFrogs == 2)
                 {
-                    greenFrogs++;
+                    combinationFound = true;
                 }
-                else if (frogSrc.Contains("frog0.gif"))
+                else
                 {
-                    emptySpaces++;
-                }
-            }
-
-            Console.WriteLine($"Brown Frogs: {brownFrogs}");
-            Console.WriteLine($"Green Frogs: {greenFrogs}");
-            Console.WriteLine($"Empty Spaces: {emptySpaces}");
-
-            bool correctSetup = false;
-
-            if (brownFrogs == 2 && greenFrogs == 2)
-            {
-                correctSetup = true;
-                Console.WriteLine(" The game has 2 brown and 2 green frogs!");
-                //break;
-            }
-            else
-            {
-                try
-                {
-
-                    var newGameBtn = driver.FindElement(By.XPath("//input[@value='NEW GAME']"));
-                    newGameBtn.Click();
-                }
-                catch (NoSuchElementException)
-                {
-                    Console.WriteLine("New Game button not found! Retrying...");
+                    driver.FindElement(By.XPath("//input[@value='NEW GAME']")).Click();
                 }
             }
 
 
-            //pasidaryt norima setupa - spaudyt new game kol pasidarys musu norima kombinacija? 2x2 kombo
+
+
 
             //pradeda zalia - jei pries ja yra forg zero - spausti
             //patikrinti ar vel is kaires yra tuscia, jei ne veiksmas su zalia
