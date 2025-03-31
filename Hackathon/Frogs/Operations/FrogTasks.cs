@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Hackathon.Frogs.Helpers;
+using NUnit.Framework;
 using OpenQA.Selenium;
 
 namespace Hackathon.Frogs.Operations
@@ -48,15 +49,11 @@ namespace Hackathon.Frogs.Operations
             return false;
         }
 
-        public (List<(IWebElement element, int position)> frog0Elements,
-        List<(IWebElement element, int position)> frog1Elements,
-        List<(IWebElement element, int position)> frog2Elements)
-        GetFrogElementsToList(IWebDriver driver)
+        public (List<int> positionsEmptySpace, List<int> positionsBrownFrog, List<int> positionsGreenFrog) GetFrogElementsToList(IWebDriver driver)
         {
-            // Initialize lists to store frogs and empty spaces
-            List<(IWebElement element, int position)> frog0Elements = new List<(IWebElement, int)>();
-            List<(IWebElement element, int position)> frog1Elements = new List<(IWebElement, int)>();
-            List<(IWebElement element, int position)> frog2Elements = new List<(IWebElement, int)>();
+            List<int> positionsEmptySpace = new List<int>();
+            List<int> positionsBrownFrog = new List<int>();
+            List<int> positionsGreenFrog = new List<int>();
 
             // Find all frog-related elements
             var frogElements = driver.FindElements(By.XPath("//img"));
@@ -70,30 +67,88 @@ namespace Hackathon.Frogs.Operations
                 int position = int.Parse(onMouseDown.Split('(', ')')[1]); // Extracts position number
                 string imageSrc = frogElement.GetAttribute("src");
 
-                // Categorize and add to the correct list
+                // Categorize positions based on the image source
                 if (imageSrc.Contains("frog0.gif"))
-                    frog0Elements.Add((frogElement, position)); // Empty space
+                {
+                    positionsEmptySpace.Add(position);
+                }
                 else if (imageSrc.Contains("frog1.gif"))
-                    frog1Elements.Add((frogElement, position)); // Brown frog
+                {
+                    positionsBrownFrog.Add(position);
+                }
                 else if (imageSrc.Contains("frog2.gif"))
-                    frog2Elements.Add((frogElement, position)); // Green frog
+                {
+                    positionsGreenFrog.Add(position);
+                }
             }
 
-            // Return all three lists
-            return (frog0Elements, frog1Elements, frog2Elements);
+            return (positionsEmptySpace, positionsBrownFrog, positionsGreenFrog);
         }
+
+        public void sortFrogPositionInList(IWebDriver driver)
+        {
+            var (positionsEmptySpace, positionsBrownFrog, positionsGreenFrog) = GetFrogElementsToList(driver);
+            positionsEmptySpace = positionsEmptySpace.OrderBy(pos => pos).ToList();
+            positionsBrownFrog = positionsBrownFrog.OrderByDescending(pos => pos).ToList();
+            positionsGreenFrog = positionsGreenFrog.OrderBy(pos => pos).ToList();
+        }
+
+        //public void MoveFrogs(IWebDriver driver)
+        //{
+        //    var (brownFrogs, greenFrogs, emptySpaces) = GetFrogCounts(driver);
+        //    var (positionsEmptySpace, positionsBrownFrog, positionsGreenFrog) = GetFrogElementsToList(driver);
+        //    sortFrogPositionInList(driver);
+
+        //    while (positionsBrownFrog.Any(pos => pos < 4) || positionsGreenFrog.Any(pos => pos > 4))
+        //    {
+        //        foreach (var position in positionsBrownFrog)
+        //        {
+        //            //move brown frog to the right
+        //            var nextPosition = position + 1;
+        //            var jumpPosition = position + 2;
+
+        //            if (positionsEmptySpace.Any(pos => pos == nextPosition))
+        //            {
+        //                // Move to the next position
+        //                driver.FindElement(By.XPath($"//img[contains(@onmousedown, 'Clicked({position})')]")).Click();
+        //                break;
+        //            }
+
+        //            }
+        //        }
+        //    }
 
         public void MoveFrogs(IWebDriver driver)
         {
             var (brownFrogs, greenFrogs, emptySpaces) = GetFrogCounts(driver);
-            // 2 2 5
-            List<(IWebElement element, int position)> frog0Elements = new List<(IWebElement, int)>();
-            List<(IWebElement element, int position)> frog1Elements = new List<(IWebElement, int)>();
-            List<(IWebElement element, int position)> frog2Elements = new List<(IWebElement, int)>();
+            var (positionsEmptySpace, positionsBrownFrog, positionsGreenFrog) = GetFrogElementsToList(driver);
+            sortFrogPositionInList(driver);
 
+             foreach (var position in positionsBrownFrog)
+                {
+                    if (position == 3)
+                    {
+                        driver.FindElement(By.XPath($"//img[contains(@onmousedown, 'Clicked({position})')]")).Click();
+                        break;
+                    }
+                }
+            foreach (var position in positionsGreenFrog)
+            {
+                if (position == 5)
+                {
+                    driver.FindElement(By.XPath($"//img[contains(@onmousedown, 'Clicked({position})')]")).Click();
+                    break;
+                }
+            }
+            foreach (var position in positionsBrownFrog)
+            {
+                if (position == 4)
+                {
+                    driver.FindElement(By.XPath($"//img[contains(@onmousedown, 'Clicked({position})')]")).Click();
+                    break;
+                }
+            }
 
         }
-
-
     }
 }
