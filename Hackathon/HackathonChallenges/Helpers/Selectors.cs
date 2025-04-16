@@ -22,6 +22,9 @@ namespace Hackathon.Frogs.Helpers
         public static string mathLink = "https://www.mathster.com/10secondsmaths/";
         public static readonly By QuestionNumber = By.Id("question");
         public static readonly By AnswerField = By.Id("question-answer");
+        public static readonly By SubmitAnswer = By.Id("submit-answer");
+        public static readonly By SubCheckbox = By.XPath("//label/input[@type='checkbox' and @value='sub']");
+        public static readonly By Timer = By.Id("time-left");
     }
 
 }
