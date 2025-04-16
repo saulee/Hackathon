@@ -19,6 +19,9 @@ namespace Hackathon.Frogs.Helpers
         public static readonly By frogElements = By.TagName("img");
         public static readonly By newGameBtn = By.XPath("//input[@value='NEW GAME']");
 
+        public static string mathLink = "https://www.mathster.com/10secondsmaths/";
+        public static readonly By QuestionNumber = By.Id("question");
+        public static readonly By AnswerField = By.Id("question-answer");
     }
 
 }

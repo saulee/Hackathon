@@ -85,70 +85,61 @@ namespace Hackathon.Frogs.Operations
             return (positionsEmptySpace, positionsBrownFrog, positionsGreenFrog);
         }
 
-        public void sortFrogPositionInList(IWebDriver driver)
+        public (List<int> positionsEmptySpace, List<int> positionsBrownFrog, List<int> positionsGreenFrog) sortFrogPositionInList(IWebDriver driver)
         {
             var (positionsEmptySpace, positionsBrownFrog, positionsGreenFrog) = GetFrogElementsToList(driver);
             positionsEmptySpace = positionsEmptySpace.OrderBy(pos => pos).ToList();
             positionsBrownFrog = positionsBrownFrog.OrderByDescending(pos => pos).ToList();
             positionsGreenFrog = positionsGreenFrog.OrderBy(pos => pos).ToList();
+            return (positionsEmptySpace, positionsBrownFrog, positionsGreenFrog);
         }
-
-        //public void MoveFrogs(IWebDriver driver)
-        //{
-        //    var (brownFrogs, greenFrogs, emptySpaces) = GetFrogCounts(driver);
-        //    var (positionsEmptySpace, positionsBrownFrog, positionsGreenFrog) = GetFrogElementsToList(driver);
-        //    sortFrogPositionInList(driver);
-
-        //    while (positionsBrownFrog.Any(pos => pos < 4) || positionsGreenFrog.Any(pos => pos > 4))
-        //    {
-        //        foreach (var position in positionsBrownFrog)
-        //        {
-        //            //move brown frog to the right
-        //            var nextPosition = position + 1;
-        //            var jumpPosition = position + 2;
-
-        //            if (positionsEmptySpace.Any(pos => pos == nextPosition))
-        //            {
-        //                // Move to the next position
-        //                driver.FindElement(By.XPath($"//img[contains(@onmousedown, 'Clicked({position})')]")).Click();
-        //                break;
-        //            }
-
-        //            }
-        //        }
-        //    }
 
         public void MoveFrogs(IWebDriver driver)
         {
             var (brownFrogs, greenFrogs, emptySpaces) = GetFrogCounts(driver);
-            var (positionsEmptySpace, positionsBrownFrog, positionsGreenFrog) = GetFrogElementsToList(driver);
-            sortFrogPositionInList(driver);
+            var (positionsEmptySpace, positionsBrownFrog, positionsGreenFrog) = sortFrogPositionInList(driver);
 
-             foreach (var position in positionsBrownFrog)
+            while (positionsBrownFrog.Any(pos => pos < 4) || positionsGreenFrog.Any(pos => pos > 4))
+            {
+                foreach (var position in positionsBrownFrog)
                 {
-                    if (position == 3)
+                    var nextPosition = position + 1;
+                    var jumpPosition = position + 2;
+
+                    if (positionsEmptySpace.Contains(nextPosition))
+                    {
+                        driver.FindElement(By.XPath($"//img[contains(@onmousedown, 'Clicked({position})')]")).Click();
+                        //check the alert message separate method
+                        break;
+                    }
+                    else if (positionsEmptySpace.Contains(jumpPosition))
                     {
                         driver.FindElement(By.XPath($"//img[contains(@onmousedown, 'Clicked({position})')]")).Click();
                         break;
                     }
                 }
-            foreach (var position in positionsGreenFrog)
-            {
-                if (position == 5)
-                {
-                    driver.FindElement(By.XPath($"//img[contains(@onmousedown, 'Clicked({position})')]")).Click();
-                    break;
-                }
-            }
-            foreach (var position in positionsBrownFrog)
-            {
-                if (position == 4)
-                {
-                    driver.FindElement(By.XPath($"//img[contains(@onmousedown, 'Clicked({position})')]")).Click();
-                    break;
-                }
-            }
 
+                (positionsEmptySpace, positionsBrownFrog, positionsGreenFrog) = sortFrogPositionInList(driver);
+
+                foreach (var position in positionsGreenFrog)
+                {
+                    var nextPosition = position - 1;
+                    var jumpPosition = position - 2;
+
+                    if (positionsEmptySpace.Contains(nextPosition))
+                    {
+                        driver.FindElement(By.XPath($"//img[contains(@onmousedown, 'Clicked({position})')]")).Click();
+                        break;
+                    }
+                    else if (positionsEmptySpace.Contains(jumpPosition))
+                    {
+                        driver.FindElement(By.XPath($"//img[contains(@onmousedown, 'Clicked({position})')]")).Click();
+                        break;
+                    }
+                }
+                (positionsEmptySpace, positionsBrownFrog, positionsGreenFrog) = sortFrogPositionInList(driver);
+            }
+            //if alert - break also add into method
         }
     }
 }
