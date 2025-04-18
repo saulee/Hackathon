@@ -29,6 +29,7 @@ namespace Hackathon.HackathonChallenges.Tests
         public void MathPageTest()
         {
             mathTasks.GoToMathPage(driver);
+            //mathTasks.SliderTo1000(driver);
             mathTasks.Checkbox(driver);
             mathTasks.SolveMathQuestion(driver);
             mathTasks.CalculateAllAnswers(driver);

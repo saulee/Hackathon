@@ -20,11 +20,17 @@ namespace Hackathon.Frogs.Helpers
         public static readonly By newGameBtn = By.XPath("//input[@value='NEW GAME']");
 
         public static string mathLink = "https://www.mathster.com/10secondsmaths/";
-        public static readonly By QuestionNumber = By.Id("question");
-        public static readonly By AnswerField = By.Id("question-answer");
-        public static readonly By SubmitAnswer = By.Id("submit-answer");
-        public static readonly By SubCheckbox = By.XPath("//label/input[@type='checkbox' and @value='sub']");
-        public static readonly By Timer = By.Id("time-left");
+        public static readonly By questionNumber = By.Id("question");
+        public static readonly By answerField = By.Id("question-answer");
+        public static readonly By submitAnswer = By.Id("submit-answer");
+        public static readonly By subCheckbox = By.XPath("//label/input[@type='checkbox' and @value='sub']");
+        public static readonly By multipCheckbox = By.XPath("//label/input[@type='checkbox' and @value='mul']");
+        public static readonly By divCheckbox = By.XPath("//label/input[@type='checkbox' and @value='div']");
+        public static readonly By powCheckbox = By.XPath("//label/input[@type='checkbox' and @value='pow']");
+        public static readonly By sqrtCheckbox = By.XPath("//label/input[@type='checkbox' and @value='sqrt']");
+        public static readonly By timer = By.Id("time-left");
+        public static readonly By slider = By.ClassName("noUi-base");
+        public static readonly By sliderValue = By.XPath("//*[@style='left: 20%;']");
     }
 
 }
